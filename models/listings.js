@@ -21,30 +21,13 @@ const listingSchema = new mongoose.Schema({
         required: true,
     },
 
-    propertyType: {
-        type: String,
-        enum: ["Apartment", "Independent House", "Villa", "PG", "Hostel"],
-        required: true,
-    },
-
     furnishing: {
         type: String,
         enum: ["Fully Furnished", "Semi Furnished", "Unfurnished"],
         required: true,
     },
 
-    bathrooms: Number,
-
     floor: String,
-
-    area: Number,
-
-    availableFrom: Date,
-
-    bachelorAllowed: {
-        type: Boolean,
-        default: true,
-    },
 
     images: [
         {
@@ -54,13 +37,9 @@ const listingSchema = new mongoose.Schema({
     ],
 
     address: {
-        houseNo: String,
-        street: String,
-        locality: String,
-        city: String,
-        state: String,
-        pincode: String,
-    },
+        type: String,
+        required: true,
+     },
 
     location: {
         type: {
