@@ -1,0 +1,24 @@
+{
+  "name": "nearnest",
+  "version": "1.0.0",
+  "description": "",
+  "homepage": "https://github.com/ashwith123/NearNest#readme",
+  "bugs": {
+    "url": "https://github.com/ashwith123/NearNest/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ashwith123/NearNest.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "express": "^5.2.1",
+    "mongoose": "^9.7.3"
+  }
+}
