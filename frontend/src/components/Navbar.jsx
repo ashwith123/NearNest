@@ -2,11 +2,17 @@ import { Link } from "react-router-dom";
  import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import useAuthStore from "../store/authStore";
+
 
 function Navbar() {
 
-    const [user, setUser] = useState(null);
-    const navigate = useNavigate();
+    
+     const navigate = useNavigate();
+    
+const user = useAuthStore((state) => state.user);
+const setUser = useAuthStore((state) => state.setUser);
+const logoutStore = useAuthStore((state) => state.logout);
 
     useEffect(()=>{
     
@@ -35,6 +41,7 @@ function Navbar() {
             await axios.post("http://localhost:3000/logout",{
                 withCredentials:true,
             });
+            logoutStore();
             setUser(null);
         }
         catch(error){

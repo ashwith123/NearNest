@@ -1,11 +1,13 @@
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
+import useAuthStore from "../src/store/authStore";
 
 function Login() {
-    const navigate = useNavigate();
+     const navigate = useNavigate();
+        const setLoggedInUser = useAuthStore((state) => state.setUser);
 
-    const [user, setUser] = useState({
+    const [formData, setFormData] = useState({
         username: "",
         password: "",
     });
@@ -13,8 +15,8 @@ function Login() {
     const [error, setError] = useState("");
 
     function handleChange(e) {
-        setUser({
-            ...user,
+        setFormData({
+            ...formData,
             [e.target.name]: e.target.value,
         });
     }
@@ -27,13 +29,16 @@ function Login() {
         try {
             const res = await axios.post(
                 "http://localhost:3000/login",
-                user,
+                formData,
                 {
                     withCredentials: true,
                 }
             );
 
+            setLoggedInUser(res.data.user);
+
             alert(res.data.message);
+            
             navigate("/listings");
         } catch (err) {
             setError(
@@ -41,6 +46,7 @@ function Login() {
             );
         }
     }
+
 
     return (
         <div className="login-page">
@@ -54,7 +60,7 @@ function Login() {
                         type="text"
                         name="username"
                         placeholder="Username"
-                        value={user.username}
+                        value={formData.username}
                         onChange={handleChange}
                         required
                     />
@@ -63,7 +69,7 @@ function Login() {
                         type="password"
                         name="password"
                         placeholder="Password"
-                        value={user.password}
+                        value={formData.password}
                         onChange={handleChange}
                         required
                     />

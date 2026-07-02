@@ -7,9 +7,33 @@ import Listings from '../pages/listing';
  import { useEffect } from 'react';
  import AddNewListing from '../pages/addListing'; 
 import ShowListing from '../pages/show';
+import useAuthStore from "./store/authStore";
+
+
+
 
 function App() {
-  const [count, setCount] = useState(0)
+ const setUser = useAuthStore((state) => state.setUser);
+
+
+useEffect(() => {
+    async function fetchUser() {
+        try {
+            const res = await axios.get(
+                "http://localhost:3000/me",
+                {
+                    withCredentials: true,
+                }
+            );
+            
+            setUser(res.data.user);
+        } catch {
+            setUser(null);
+        }
+    }
+
+    fetchUser();
+}, []);
 
   return (
      <>

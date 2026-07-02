@@ -21,8 +21,6 @@ function ShowListing() {
         } catch (err) {
             console.log(err);
             alert("Failed to fetch listing");
-        } finally {
-            setLoading(false);
         }
     }
 
