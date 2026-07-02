@@ -2,36 +2,46 @@ const express = require("express");
 const router = express.Router();
 const Listing = require("../models/listings");
 const User = require("../models/user");
-const { requireAuth } = require("../middleware/requireAuth");
+const { requireAuth } = require("../middleware.js");
+const multer = require("multer");
+const { storage } = require("../lib/cloudinary");
+const upload = multer({ storage });
 
-
-router.get("/",async (req,res)=>{
-      const allListings = await Listing.find();
-      res.render("./listings/index" ,{allListings});
-  });
+router.get("/", async (req, res) => {
+    try {
+        const allListings = await Listing.find();
+        res.status(200).json(allListings);
+    } catch (err) {
+        res.status(500).json({
+            success: false,
+            message: "Internal Server Error"
+        });
+    }
+});
 
  router.get("/:id",async (req, res) => {
     try {
       const listingId = req.params.id;
 
       const listing = await Listing.findById(listingId)
-        .populate("postedBy"); 
+        .populate("owner"); 
 
       if (!listing) {
-        return res.status(404).render("listings/index", {
-          error: "Listing not found",
-          listings: []
+        return res.status(404).json({
+          success: false,
+          message: "Listing not found"
         });
       }
 
-      res.render("listings/show", {
-        listing,
-        currUser: req.user
-      });
+      res.status(200).json({
+    success: true,
+    listing
+});
 
     } catch (err) {
       console.error(err);
-      res.status(500).render("error", {
+      res.status(500).json({
+        success: false, 
         message: "Something went wrong"
       });
     }
@@ -41,30 +51,38 @@ router.get("/",async (req,res)=>{
   router.get("/:id/edit", requireAuth, async (req, res) => {
     try {
       const listing = await Listing.findById(req.params.id)
-        .populate("postedBy");
+        .populate("owner");
 
       if (!listing) {
-        return res.status(404).render("listings/index", {
-          error: "Listing not found",
-          listings: []
+        return res.status(404).json({
+          success: false,
+          message: "Listing not found"
         });
       }
 
-      if (!listing.postedBy._id.equals(req.user._id)) {
-        return res.status(403).send("You are not allowed to edit this listing");
+      if (!listing.owner._id.equals(req.user._id)) {
+        return res.status(403).json({
+          success: false,
+          message: "You are not allowed to edit this listing"
+        });
       }
 
-      res.render("listings/edit", { listing });
+      res.status(200).json({
+        success: true,
+        listing
+      });
 
     } catch (err) {
       console.error(err);
-      res.status(500).render("error", {
+      res.status(500).json({
+        success: false,
         message: "Something went wrong"
       });
     }
   });
 
-  router.post("/listings",requireAuth,upload.array("images", 10),async (req, res) => {
+  router.post("/add",requireAuth,upload.array("images", 10),async (req, res) => {
+console.log("Before try");
         try {
             const {
                 title,
@@ -91,12 +109,14 @@ router.get("/",async (req,res)=>{
                 !contactNumber
             ) {
                 return res.status(400).json({
+                    success: false,
                     message: "All required fields must be filled."
                 });
             }
 
             if (!req.files || req.files.length === 0) {
                 return res.status(400).json({
+                    success: false, 
                     message: "Please upload at least one image."
                 });
             }
@@ -135,8 +155,13 @@ router.get("/",async (req,res)=>{
             });
 
         } catch (err) {
-            console.error(err);
-            res.status(500).json({
+    console.log("Inside catch");
+
+            console.log(typeof err);
+            console.log(err);
+            console.dir(err, { depth: null });
+            console.log(JSON.stringify(err, null, 2));  
+              res.status(500).json({
                 success: false,
                 message: "Internal Server Error."
             });
@@ -144,7 +169,7 @@ router.get("/",async (req,res)=>{
     }
 );
 
-router.put("/listings/:id",requireAuth,upload.array("images", 10),async (req, res) => {
+router.put("/:id",requireAuth,upload.array("images", 10),async (req, res) => {
         try {
             const { id } = req.params;
 
@@ -224,7 +249,7 @@ router.put("/listings/:id",requireAuth,upload.array("images", 10),async (req, re
     }
 );
 
-router.delete("/listings/:id", isLoggedIn, async (req, res) => {
+router.delete("/:id", requireAuth, async (req, res) => {
     try {
         const { id } = req.params;
 
@@ -259,3 +284,5 @@ router.delete("/listings/:id", isLoggedIn, async (req, res) => {
         });
     }
 });
+
+module.exports = router;
