@@ -2,10 +2,11 @@ import { useState } from "react";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
 import useAuthStore from "../src/store/authStore";
+import "./Login.css";
 
 function Login() {
-     const navigate = useNavigate();
-        const setLoggedInUser = useAuthStore((state) => state.setUser);
+    const navigate = useNavigate();
+    const setLoggedInUser = useAuthStore((state) => state.setUser);
 
     const [formData, setFormData] = useState({
         username: "",
@@ -36,9 +37,8 @@ function Login() {
             );
 
             setLoggedInUser(res.data.user);
-
-             
             navigate("/listings");
+
         } catch (err) {
             setError(
                 err.response?.data?.message || "Something went wrong"
@@ -46,53 +46,70 @@ function Login() {
         }
     }
 
-
     return (
         <div className="login-page">
+
             <div className="login-card">
 
-                <h1>Login</h1>
+                <div className="login-header">
+                    <h1>Welcome Back</h1>
+                    <p>Login to continue to NearNest</p>
+                </div>
 
-                <form onSubmit={handleSubmit}>
+                <form
+                    className="login-form"
+                    onSubmit={handleSubmit}
+                >
 
-                    <input
-                        type="text"
-                        name="username"
-                        placeholder="Username"
-                        value={formData.username}
-                        onChange={handleChange}
-                        required
-                    />
+                    <div className="input-group">
+                        <label>Username</label>
+                        <input
+                            type="text"
+                            name="username"
+                            placeholder="Enter username"
+                            value={formData.username}
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
 
-                    <input
-                        type="password"
-                        name="password"
-                        placeholder="Password"
-                        value={formData.password}
-                        onChange={handleChange}
-                        required
-                    />
+                    <div className="input-group">
+                        <label>Password</label>
+                        <input
+                            type="password"
+                            name="password"
+                            placeholder="Enter password"
+                            value={formData.password}
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
 
                     {error && (
-                        <p style={{ color: "red" }}>
+                        <p className="error-message">
                             {error}
                         </p>
                     )}
 
-                    <button type="submit">
+                    <button
+                        className="login-btn"
+                        type="submit"
+                    >
                         Login
                     </button>
 
                 </form>
 
-                <p>
-                    Don't have an account?{" "}
+                <p className="signup-text">
+                    Don't have an account?
+
                     <Link to="/signup">
-                        Signup
+                        Sign Up
                     </Link>
                 </p>
 
             </div>
+
         </div>
     );
 }

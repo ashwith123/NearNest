@@ -1,14 +1,16 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import "./show.css";
 
 function ShowListing() {
     const { id } = useParams();
     const navigate = useNavigate();
 
     const [listing, setListing] = useState(null);
- 
+    const [loading, setLoading] = useState(true);
+    const [activeImage, setActiveImage] = useState(0);
+
     useEffect(() => {
         fetchListing();
     }, []);
@@ -18,84 +20,164 @@ function ShowListing() {
             const res = await axios.get(
                 `http://localhost:3000/listings/${id}`
             );
-
             setListing(res.data.listing);
         } catch (err) {
             console.log(err);
             alert("Failed to fetch listing");
+        } finally {
+            setLoading(false);
         }
     }
 
     async function handleDelete() {
+        if (!window.confirm("Are you sure you want to delete this listing?")) {
+            return;
+        }
         try {
-            await axios.delete(
-                `http://localhost:3000/listings/${id}`,
-                {
-                    withCredentials: true,
-                }
-            );
+            await axios.delete(`http://localhost:3000/listings/${id}`, {
+                withCredentials: true,
+            });
             alert("Listing deleted successfully");
             navigate("/listings");
         } catch (err) {
             console.log(err);
-            alert(
-                err.response?.data?.message ||
-                "Failed to delete listing"
-            );
-        } 
-    } 
+            alert(err.response?.data?.message || "Failed to delete listing");
+        }
+    }
 
     async function handleEdit() {
-    try {
-        await axios.get(
-            `http://localhost:3000/listings/${id}/edit`,
-            {
+        try {
+            await axios.get(`http://localhost:3000/listings/${id}/edit`, {
                 withCredentials: true,
-            }
-        );
-
-        navigate(`/listings/${id}/edit`);
-
-    } catch (err) {
-        alert(err.response?.data?.message || "You are not allowed to edit this listing.");
+            });
+            navigate(`/listings/${id}/edit`);
+        } catch (err) {
+            alert(
+                err.response?.data?.message ||
+                    "You are not allowed to edit this listing."
+            );
+        }
     }
-}
+
+    if (loading) {
+        return (
+            <div className="show-status">
+                <div className="spinner"></div>
+                <p>Loading listing...</p>
+            </div>
+        );
+    }
 
     if (!listing) {
-        return <h2>Listing Not Found</h2>;
+        return (
+            <div className="show-status">
+                <h2>Listing Not Found</h2>
+            </div>
+        );
     }
 
+    const images = listing.images?.length
+        ? listing.images
+        : [{ url: "https://placehold.co/800x500?text=No+Image" }];
+
     return (
-        <div>
-            <h1>{listing.title}</h1>
+        <div className="show-page">
+            <div className="show-container">
 
-            {listing.images.length > 0 && (
-                <img
-                    src={listing.images[0].url}
-                    alt={listing.title}
-                    width="400"
-                />
-            )}
+                {/* ===== Gallery ===== */}
+                <div className="gallery">
+                    <div className="main-image">
+                        <img
+                            src={images[activeImage].url}
+                            alt={listing.title}
+                        />
+                        <span
+                            className={
+                                listing.isAvailable
+                                    ? "status available"
+                                    : "status unavailable"
+                            }
+                        >
+                            {listing.isAvailable ? "Available" : "Not Available"}
+                        </span>
+                    </div>
 
-            <p><strong>Description:</strong> {listing.description}</p>
-            <p><strong>Rent:</strong> ₹{listing.rent}</p>
-            <p><strong>BHK:</strong> {listing.bhk}</p>
-            <p><strong>Furnishing:</strong> {listing.furnishing}</p>
-            <p><strong>Floor:</strong> {listing.floor || "N/A"}</p>
-            <p><strong>Address:</strong> {listing.address}</p>
-            <p><strong>Contact:</strong> {listing.contactNumber}</p>
+                    {images.length > 1 && (
+                        <div className="thumb-row">
+                            {images.map((img, i) => (
+                                <button
+                                    key={i}
+                                    className={
+                                        "thumb" +
+                                        (i === activeImage ? " active" : "")
+                                    }
+                                    onClick={() => setActiveImage(i)}
+                                >
+                                    <img src={img.url} alt={`thumbnail ${i + 1}`} />
+                                </button>
+                            ))}
+                        </div>
+                    )}
+                </div>
 
-            <h3>Owner Details</h3>
+                {/* ===== Details ===== */}
+                <div className="details">
+                    <div className="details-header">
+                        <h1>{listing.title}</h1>
+                        <div className="rent">
+                            ₹{listing.rent}
+                            <span>/month</span>
+                        </div>
+                    </div>
 
-            <p>Username: {listing.owner?.username}</p>
+                    <p className="address">📍 {listing.address}</p>
 
-            <button onClick={() => handleEdit()}>Edit</button>
+                    <div className="info-grid">
+                        <div className="info-item">
+                            <span className="label">🛏 BHK</span>
+                            <span className="value">{listing.bhk}</span>
+                        </div>
+                        <div className="info-item">
+                            <span className="label">🪑 Furnishing</span>
+                            <span className="value">{listing.furnishing}</span>
+                        </div>
+                        <div className="info-item">
+                            <span className="label">🏢 Floor</span>
+                            <span className="value">{listing.floor || "N/A"}</span>
+                        </div>
+                        <div className="info-item">
+                            <span className="label">📞 Contact</span>
+                            <span className="value">{listing.contactNumber}</span>
+                        </div>
+                    </div>
 
-            <button onClick={() => handleDelete()}>delete</button>
+                    <div className="description-block">
+                        <h3>Description</h3>
+                        <p>{listing.description}</p>
+                    </div>
 
+                    <div className="owner-card">
+                        <div>
+                            <p className="owner-label">Listed by</p>
+                            <p className="owner-name">
+                                {listing.owner?.username || "Unknown"}
+                            </p>
+                        </div>
+                    </div>
+
+                    <div className="action-btns">
+                        <button className="edit-btn" onClick={handleEdit}>
+                            ✏️ Edit
+                        </button>
+                        <button className="delete-btn" onClick={handleDelete}>
+                            🗑 Delete
+                        </button>
+                    </div>
+                </div>
+
+            </div>
         </div>
     );
 }
-
 
 export default ShowListing;

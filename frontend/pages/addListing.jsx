@@ -68,47 +68,64 @@ function AddListing() {
     }
 
     return (
-        <div className="add-listing-page">
+    <div className="edit-listing-page">
+        <h1>Add New Property</h1>
 
-            <h1>Add House Listing</h1>
+        <form className="edit-form" onSubmit={handleSubmit}>
 
-            <form onSubmit={handleSubmit}>
+            <h2 className="section-title">🏠 Property Details</h2>
 
+            <div className="form-group">
+                <label>Property Title</label>
                 <input
                     type="text"
                     name="title"
-                    placeholder="Title"
+                    placeholder="e.g. Spacious 2 BHK Apartment"
                     value={formData.title}
                     onChange={handleChange}
                     required
                 />
+            </div>
 
+            <div className="form-group full-width">
+                <label>Description</label>
                 <textarea
                     name="description"
-                    placeholder="Description"
+                    placeholder="Describe your property, nearby facilities, amenities, parking, water supply, etc."
                     value={formData.description}
                     onChange={handleChange}
                     required
                 />
+            </div>
 
+            <h2 className="section-title">💰 Rental Information</h2>
+
+            <div className="form-group">
+                <label>Monthly Rent (₹)</label>
                 <input
                     type="number"
                     name="rent"
-                    placeholder="Monthly Rent"
+                    placeholder="e.g. 15000"
                     value={formData.rent}
                     onChange={handleChange}
                     required
                 />
+            </div>
 
+            <div className="form-group">
+                <label>BHK</label>
                 <input
                     type="number"
                     name="bhk"
-                    placeholder="BHK"
+                    placeholder="e.g. 2"
                     value={formData.bhk}
                     onChange={handleChange}
                     required
                 />
+            </div>
 
+            <div className="form-group">
+                <label>Furnishing</label>
                 <select
                     name="furnishing"
                     value={formData.furnishing}
@@ -118,52 +135,77 @@ function AddListing() {
                     <option>Semi Furnished</option>
                     <option>Unfurnished</option>
                 </select>
+            </div>
 
+            <div className="form-group">
+                <label>Floor</label>
                 <input
                     type="text"
                     name="floor"
-                    placeholder="Floor"
+                    placeholder="e.g. Ground, 1st, 2nd"
                     value={formData.floor}
                     onChange={handleChange}
                 />
+            </div>
 
+            <h2 className="section-title">📍 Location Details</h2>
+
+            <div className="form-group full-width">
+                <label>Address</label>
                 <input
                     type="text"
                     name="address"
-                    placeholder="Address"
+                    placeholder="Complete Property Address"
                     value={formData.address}
                     onChange={handleChange}
                     required
                 />
+            </div>
 
+            <div className="form-group">
+                <label>Latitude</label>
                 <input
                     type="number"
                     step="any"
                     name="latitude"
-                    placeholder="Latitude"
+                    placeholder="e.g. 17.3850"
                     value={formData.latitude}
                     onChange={handleChange}
                     required
                 />
+            </div>
 
+            <div className="form-group">
+                <label>Longitude</label>
                 <input
                     type="number"
                     step="any"
                     name="longitude"
-                    placeholder="Longitude"
+                    placeholder="e.g. 78.4867"
                     value={formData.longitude}
                     onChange={handleChange}
                     required
                 />
+            </div>
 
+            <h2 className="section-title">📞 Contact Details</h2>
+
+            <div className="form-group full-width">
+                <label>Owner Contact Number</label>
                 <input
                     type="text"
                     name="contactNumber"
-                    placeholder="Contact Number"
+                    placeholder="e.g. 9876543210"
                     value={formData.contactNumber}
                     onChange={handleChange}
                     required
                 />
+            </div>
+
+            <h2 className="section-title">🖼 Property Images</h2>
+
+            <div className="form-group full-width">
+                <label>Upload Property Images</label>
 
                 <input
                     type="file"
@@ -173,14 +215,18 @@ function AddListing() {
                     required
                 />
 
-                <button type="submit">
-                    Add Listing
-                </button>
+                <small className="upload-note">
+                    Upload high-quality images of the property. You can select multiple images.
+                </small>
+            </div>
 
-            </form>
+            <button type="submit">
+                Add Listing
+            </button>
 
-        </div>
-    );
+        </form>
+    </div>
+);
 }
 
 export default AddListing;

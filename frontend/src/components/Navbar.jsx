@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import useAuthStore from "../store/authStore";
-
+import "./Navbar.css";
 
 function Navbar() {
 
@@ -61,70 +61,29 @@ const logoutStore = useAuthStore((state) => state.logout);
 
 
     return (
-        <nav className="navbar navbar-expand-md bg-body-light border-bottom sticky-top">
+    <nav className="navbar">
+        <div className="nav-container">
+            <Link to="/listings" className="logo">
+                <i className="fa-solid fa-house"></i>
+                <span>NearNest</span>
+            </Link>
 
-            <div className="container-fluid">
-
-                <div 
-                className="collapse navbar-collapse" 
-                id="navbarId"
-                >
-
-
-                    <div className="navbar-nav">
-                        <Link
-                            className="nav-link"
-                            to="/listings"
-                            >
-                            <div id="icon">
-                                <i className="fa-solid fa-house"></i>
-                                NearNest
-                            </div>  
-                        </Link>
-                    </div>
-
-                    <div className="navbar-nav ms-auto">
-                        {user ? (
-                            <>
-                            <Link
-                                    to="/listings/add"
-                                    className="nav-link"
-                                    onClick={addNewListing}
-                                >
-                                    Add New Listing
-                            </Link>
-                            <button
-                                     className="nav-link btn btn-link"
-                                     onClick={handleLogout}
-                            >
-                                Logout
-                            </button>
-                            </>
-                        ) : (
-                            <>
-                                <Link
-                                    className="nav-link"
-                                    to="/login"
-                                >
-                                    Login
-                                </Link>
-                                <Link
-                                    className="nav-link"
-                                    to="/signup"
-                                 >
-                                    Signup
-                                </Link>
-                            </>
-                        )
-                        }
-                    </div>
-                
-                </div>
-                
+            <div className="nav-links">
+                {user ? (
+                    <>
+                        <Link to="/listings/add" className="nav-btn">Add Listing</Link>
+                        <button className="logout-btn" onClick={handleLogout}>Logout</button>
+                    </>
+                ) : (
+                    <>
+                        <Link to="/login" className="nav-btn">Login</Link>
+                        <Link to="/signup" className="signup-btn">Signup</Link>
+                    </>
+                )}
             </div>
-
-              </nav>
-    );
+        </div>
+    </nav>
+);
 }
 
 export default Navbar;

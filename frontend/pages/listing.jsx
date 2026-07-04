@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
+import "./listing.css";
 
 function ListingsPage() {
     const navigate = useNavigate();
     const [allListings, setAllListings] = useState([]);
 
     useEffect(() => {
-        const fetchListings = async () => {
+        async function fetchListings() {
             try {
                 const res = await axios.get(
                     "http://localhost:3000/listings",
@@ -21,19 +22,19 @@ function ListingsPage() {
                 console.log(err);
                 navigate("/login");
             }
-        };
+        }
 
         fetchListings();
     }, []);
 
     return (
-        <div>
-            <div className="profile-page-title">
-                <h1>Available Houses</h1>
+        <div className="listings-page">
+            <div className="page-header">
+                <h1>Find Your Perfect Home</h1>
                 <p>Browse rental houses near you</p>
             </div>
 
-            <div className="listing-container">
+            <div className="listing-grid">
                 {allListings.map((listing) => (
                     <Link
                         key={listing._id}
@@ -42,39 +43,59 @@ function ListingsPage() {
                     >
                         <div className="listing-card">
 
-                            <img
-                                src={
-                                    listing.images?.length > 0
-                                        ? listing.images[0].url
-                                        : "https://imgs.search.brave.com/tu80peDDYz46QJ-k5hQt-xJBiKLPdXDaWtkdTw-6rH8/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly9jZG4t/ZnJvbnQuZnJlZXBp/ay5jb20vaG9tZS9h/bm9uLXJ2bXAvY3Jl/YXRpdmUtc3VpdGUv/YXVkaW8tY3JlYXRp/b24vdmlzdWFscy1z/b25ncy53ZWJw"  
-                                }
-                                alt={listing.title}
-                            />
+                            <div className="listing-image">
+                                <img
+                                    src={
+                                        listing.images?.length > 0
+                                            ? listing.images[0].url
+                                            : "https://placehold.co/600x400?text=No+Image"
+                                    }
+                                    alt={listing.title}
+                                />
 
-                            <div className="card-body">
-                                <h3>{listing.title}</h3>
+                                <span
+                                    className={
+                                        listing.isAvailable
+                                            ? "status available"
+                                            : "status unavailable"
+                                    }
+                                >
+                                    {listing.isAvailable
+                                        ? "Available"
+                                        : "Not Available"}
+                                </span>
+                            </div>
 
-                                <p>
-                                    <strong>₹{listing.rent}/month</strong>
+                            <div className="card-content">
+
+                                <h2>{listing.title}</h2>
+
+                                <div className="rent">
+                                    ₹{listing.rent}
+                                    <span>/month</span>
+                                </div>
+
+                                <div className="listing-info">
+                                    <span> {listing.bhk} BHK</span>
+                                    <span> {listing.furnishing}</span>
+                                </div>
+
+                                <div className="address">
+                                     {listing.address}
+                                </div>
+
+                                <p className="description">
+                                    {listing.description
+                                        ? listing.description.length > 100
+                                            ? listing.description.substring(0, 100) + "..."
+                                            : listing.description
+                                        : "No description provided."}
                                 </p>
 
-                                <p>
-                                    {listing.bhk} BHK • {listing.furnishing}
-                                </p>
+                                <div className="view-btn">
+                                    View Details →
+                                </div>
 
-                                <p>{listing.address}</p>
-
-                                <p>
-                                    {listing.description.length > 100
-                                        ? listing.description.substring(0, 100) + "..."
-                                        : listing.description}
-                                </p>
-
-                                {!listing.isAvailable && (
-                                    <p style={{ color: "red" }}>
-                                        Not Available
-                                    </p>
-                                )}
                             </div>
 
                         </div>

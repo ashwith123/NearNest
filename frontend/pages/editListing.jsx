@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
+import "./editListing.css";
 
 function EditListing() {
     const { id } = useParams();
@@ -111,122 +112,162 @@ function EditListing() {
   
 
     return (
-        <div className="edit-listing-page">
+    <div className="edit-listing-page">
+        <h1>Edit Property Listing</h1>
 
-            <h1>Edit Listing</h1>
+        <form className="edit-form" onSubmit={handleSubmit}>
 
-            <form onSubmit={handleSubmit}>
+    <h2 className="section-title">🏠 Property Details</h2>
 
-                <input
-                    type="text"
-                    name="title"
-                    placeholder="Title"
-                    value={formData.title}
-                    onChange={handleChange}
-                    required
-                />
+    <div className="form-group">
+        <label>Property Title</label>
+        <input
+            type="text"
+            name="title"
+            placeholder="e.g. Spacious 2 BHK Apartment"
+            value={formData.title}
+            onChange={handleChange}
+            required
+        />
+    </div>
 
-                <textarea
-                    name="description"
-                    placeholder="Description"
-                    value={formData.description}
-                    onChange={handleChange}
-                    required
-                />
+    <div className="form-group full-width">
+        <label>Description</label>
+        <textarea
+            name="description"
+            placeholder="Describe your property, nearby facilities, amenities, etc."
+            value={formData.description}
+            onChange={handleChange}
+            required
+        />
+    </div>
 
-                <input
-                    type="number"
-                    name="rent"
-                    placeholder="Monthly Rent"
-                    value={formData.rent}
-                    onChange={handleChange}
-                    required
-                />
+    <h2 className="section-title">💰 Rental Information</h2>
 
-                <input
-                    type="number"
-                    name="bhk"
-                    placeholder="BHK"
-                    value={formData.bhk}
-                    onChange={handleChange}
-                    required
-                />
+    <div className="form-group">
+        <label>Monthly Rent (₹)</label>
+        <input
+            type="number"
+            name="rent"
+            placeholder="e.g. 15000"
+            value={formData.rent}
+            onChange={handleChange}
+            required
+        />
+    </div>
 
-                <select
-                    name="furnishing"
-                    value={formData.furnishing}
-                    onChange={handleChange}
-                >
-                    <option>Fully Furnished</option>
-                    <option>Semi Furnished</option>
-                    <option>Unfurnished</option>
-                </select>
+    <div className="form-group">
+        <label>BHK</label>
+        <input
+            type="number"
+            name="bhk"
+            placeholder="e.g. 2"
+            value={formData.bhk}
+            onChange={handleChange}
+            required
+        />
+    </div>
 
-                <input
-                    type="text"
-                    name="floor"
-                    placeholder="Floor"
-                    value={formData.floor}
-                    onChange={handleChange}
-                />
+    <div className="form-group">
+        <label>Furnishing</label>
+        <select
+            name="furnishing"
+            value={formData.furnishing}
+            onChange={handleChange}
+        >
+            <option>Fully Furnished</option>
+            <option>Semi Furnished</option>
+            <option>Unfurnished</option>
+        </select>
+    </div>
 
-                <input
-                    type="text"
-                    name="address"
-                    placeholder="Address"
-                    value={formData.address}
-                    onChange={handleChange}
-                    required
-                />
+    <div className="form-group">
+        <label>Floor</label>
+        <input
+            type="text"
+            name="floor"
+            placeholder="e.g. Ground, 1st, 2nd"
+            value={formData.floor}
+            onChange={handleChange}
+        />
+    </div>
 
-                <input
-                    type="number"
-                    step="any"
-                    name="latitude"
-                    placeholder="Latitude"
-                    value={formData.latitude}
-                    onChange={handleChange}
-                    required
-                />
+    <h2 className="section-title">📍 Location Details</h2>
 
-                <input
-                    type="number"
-                    step="any"
-                    name="longitude"
-                    placeholder="Longitude"
-                    value={formData.longitude}
-                    onChange={handleChange}
-                    required
-                />
+    <div className="form-group full-width">
+        <label>Address</label>
+        <input
+            type="text"
+            name="address"
+            placeholder="Complete Property Address"
+            value={formData.address}
+            onChange={handleChange}
+            required
+        />
+    </div>
 
-                <input
-                    type="text"
-                    name="contactNumber"
-                    placeholder="Contact Number"
-                    value={formData.contactNumber}
-                    onChange={handleChange}
-                    required
-                />
+    <div className="form-group">
+        <label>Latitude</label>
+        <input
+            type="number"
+            step="any"
+            name="latitude"
+            placeholder="e.g. 17.3850"
+            value={formData.latitude}
+            onChange={handleChange}
+            required
+        />
+    </div>
 
-                <label>
-                    Upload New Images (Optional)
-                </label>
+    <div className="form-group">
+        <label>Longitude</label>
+        <input
+            type="number"
+            step="any"
+            name="longitude"
+            placeholder="e.g. 78.4867"
+            value={formData.longitude}
+            onChange={handleChange}
+            required
+        />
+    </div>
 
-                <input
-                    type="file"
-                    multiple
-                    accept="image/*"
-                    onChange={handleImageChange}
-                />
+    <h2 className="section-title">📞 Contact Details</h2>
 
-                <button type="submit">
-                    Update Listing
-                </button>
+    <div className="form-group full-width">
+        <label>Owner Contact Number</label>
+        <input
+            type="text"
+            name="contactNumber"
+            placeholder="e.g. 9876543210"
+            value={formData.contactNumber}
+            onChange={handleChange}
+            required
+        />
+    </div>
 
-            </form>
+    <h2 className="section-title">🖼 Property Images</h2>
 
-        </div>
-    );
+    <div className="form-group full-width">
+        <label>Upload New Images</label>
+        <input
+            type="file"
+            multiple
+            accept="image/*"
+            onChange={handleImageChange}
+        />
+        <small className="upload-note">
+            Leave empty if you don't want to replace existing images.
+        </small>
+    </div>
+
+    <button type="submit">
+        Update Listing
+    </button>
+
+</form>
+    </div>
+);
 }
 
 export default EditListing;
