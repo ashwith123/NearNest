@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 function ShowListing() {
     const { id } = useParams();
+    const navigate = useNavigate();
 
     const [listing, setListing] = useState(null);
  
@@ -23,6 +25,41 @@ function ShowListing() {
             alert("Failed to fetch listing");
         }
     }
+
+    async function handleDelete() {
+        try {
+            await axios.delete(
+                `http://localhost:3000/listings/${id}`,
+                {
+                    withCredentials: true,
+                }
+            );
+            alert("Listing deleted successfully");
+            navigate("/listings");
+        } catch (err) {
+            console.log(err);
+            alert(
+                err.response?.data?.message ||
+                "Failed to delete listing"
+            );
+        } 
+    } 
+
+    async function handleEdit() {
+    try {
+        await axios.get(
+            `http://localhost:3000/listings/${id}/edit`,
+            {
+                withCredentials: true,
+            }
+        );
+
+        navigate(`/listings/${id}/edit`);
+
+    } catch (err) {
+        alert(err.response?.data?.message || "You are not allowed to edit this listing.");
+    }
+}
 
     if (!listing) {
         return <h2>Listing Not Found</h2>;
@@ -51,8 +88,14 @@ function ShowListing() {
             <h3>Owner Details</h3>
 
             <p>Username: {listing.owner?.username}</p>
+
+            <button onClick={() => handleEdit()}>Edit</button>
+
+            <button onClick={() => handleDelete()}>delete</button>
+
         </div>
     );
 }
+
 
 export default ShowListing;

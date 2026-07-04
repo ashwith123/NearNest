@@ -60,7 +60,8 @@ router.get("/", async (req, res) => {
         });
       }
 
-      if (!listing.owner._id.equals(req.user._id)) {
+       
+    if (listing.owner._id.toString() !== req.userId) {
         return res.status(403).json({
           success: false,
           message: "You are not allowed to edit this listing"
@@ -76,7 +77,7 @@ router.get("/", async (req, res) => {
       console.error(err);
       res.status(500).json({
         success: false,
-        message: "Something went wrong"
+        message: "not allowed to edit this listing  "
       });
     }
   });
@@ -262,7 +263,7 @@ router.delete("/:id", requireAuth, async (req, res) => {
             });
         }
 
-         if (listing.owner.toString() !== req.userId) {
+         if (listing.owner._id.toString() !== req.userId) {
             return res.status(403).json({
                 success: false,
                 message: "You are not authorized to delete this listing."

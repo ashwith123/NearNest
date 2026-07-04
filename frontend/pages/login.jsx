@@ -37,8 +37,7 @@ function Login() {
 
             setLoggedInUser(res.data.user);
 
-            alert(res.data.message);
-            
+             
             navigate("/listings");
         } catch (err) {
             setError(
