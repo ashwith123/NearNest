@@ -8,8 +8,32 @@ function ListingsPage() {
     const navigate = useNavigate();
     const [allListings, setAllListings] = useState([]);
 
-    useEffect(() => {
-        async function fetchListings() {
+    async function findNearby() {
+    navigator.geolocation.getCurrentPosition(
+        async (position) => {
+            const lat = position.coords.latitude;
+            const lng = position.coords.longitude;
+
+            try {
+                const res = await axios.get(
+                    `http://localhost:3000/listings/nearby?lat=${lat}&lng=${lng}`,
+                    {
+                        withCredentials: true,
+                    }
+                );
+
+                setAllListings(res.data);
+            } catch (err) {
+                console.log(err);
+            }
+        },
+        (error) => {
+            console.log(error);
+            alert("Unable to get your location.");
+        }
+    );
+}
+    async function fetchListings() {
             try {
                 const res = await axios.get(
                     "http://localhost:3000/listings",
@@ -25,6 +49,9 @@ function ListingsPage() {
             }
         }
 
+    useEffect(() => {
+        
+
         fetchListings();
     }, []);
 
@@ -33,6 +60,11 @@ function ListingsPage() {
             <div className="page-header">
                 <h1>Find Your Perfect Home</h1>
                 <p>Browse rental houses near you</p>
+                <div className="filter-container">
+                    <button className="nearby-btn" onClick={findNearby}>
+                         click to View Nearby Listings
+                    </button>
+                </div>
             </div>
 
             <div className="listing-grid">

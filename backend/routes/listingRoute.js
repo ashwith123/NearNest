@@ -19,6 +19,27 @@ router.get("/", async (req, res) => {
     }
 });
 
+router.get("/nearby", async (req, res) => {
+
+    const { lat, lng } = req.query;
+
+    const listings = await Listing.find({
+        location: {
+            $near: {
+                $geometry: {
+                    type: "Point",
+                    coordinates: [
+                        parseFloat(lng),
+                        parseFloat(lat)
+                    ]
+                }
+            }
+        }
+    });
+
+    res.json(listings);
+});
+
  router.get("/:id",async (req, res) => {
     try {
       const listingId = req.params.id;
@@ -47,27 +68,6 @@ router.get("/", async (req, res) => {
     }
   });
 
-router.get("/nearby", async (req, res) => {
-
-    const { lat, lng } = req.query;
-
-    const listings = await Listing.find({
-        location: {
-            $near: {
-                $geometry: {
-                    type: "Point",
-                    coordinates: [
-                        parseFloat(lng),
-                        parseFloat(lat)
-                    ]
-                }
-            }
-        }
-    });
-
-    res.json(listings);
-});
-  
   router.get("/:id/edit", requireAuth, async (req, res) => {
     try {
       const listing = await Listing.findById(req.params.id)
@@ -100,7 +100,7 @@ router.get("/nearby", async (req, res) => {
         message: "not allowed to edit this listing  "
       });
     }
-  });
+  });  
 
   router.post("/add",requireAuth,upload.array("images", 10),async (req, res) => {
 console.log("Before try");

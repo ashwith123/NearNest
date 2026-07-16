@@ -191,3 +191,36 @@
         font-size: 1.6rem;
     }
 }
+.filter-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.nearby-btn {
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 12px 24px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    box-shadow: 0 6px 15px rgba(37, 99, 235, 0.3);
+}
+
+.nearby-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(37, 99, 235, 0.4);
+    background: linear-gradient(135deg, #1d4ed8, #1e40af);
+}
+
+.nearby-btn:active {
+    transform: translateY(0);
+}
+
+.nearby-btn:focus {
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.25);
+}
