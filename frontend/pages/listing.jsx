@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
 import "./listing.css";
+import MapPicker from "../src/components/MapPicker.jsx";
 
 function ListingsPage() {
     const navigate = useNavigate();
@@ -100,6 +101,7 @@ function ListingsPage() {
 
                         </div>
                     </Link>
+
                 ))}
             </div>
         </div>

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./show.css";
+import MapPicker from "../src/components/MapPicker.jsx";
 
 function ShowListing() {
     const { id } = useParams();
@@ -176,6 +177,19 @@ function ShowListing() {
                 </div>
 
             </div>
+            <div className="map-section">
+                 <h2>See the location</h2>
+
+            <div className="map-container">
+                <MapPicker
+                    coordinates={[
+                        listing.location.coordinates[1], // latitude
+                        listing.location.coordinates[0], // longitude
+                    ]}
+                    listing={listing}
+                />
+          </div>
+</div>
         </div>
     );
 }

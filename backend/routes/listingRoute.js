@@ -47,6 +47,26 @@ router.get("/", async (req, res) => {
     }
   });
 
+router.get("/nearby", async (req, res) => {
+
+    const { lat, lng } = req.query;
+
+    const listings = await Listing.find({
+        location: {
+            $near: {
+                $geometry: {
+                    type: "Point",
+                    coordinates: [
+                        parseFloat(lng),
+                        parseFloat(lat)
+                    ]
+                }
+            }
+        }
+    });
+
+    res.json(listings);
+});
   
   router.get("/:id/edit", requireAuth, async (req, res) => {
     try {

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import MapPicker from "../src/components/MapPicker.jsx";
 
 function AddListing() {
     const navigate = useNavigate();
@@ -13,10 +14,10 @@ function AddListing() {
         furnishing: "Fully Furnished",
         floor: "",
         address: "",
-        latitude: "",
-        longitude: "",
         contactNumber: "",
     });
+
+    const [coordinates, setCoordinates] = useState(null);
 
     const [images, setImages] = useState([]);
 
@@ -40,6 +41,14 @@ function AddListing() {
             Object.keys(formData).forEach((key) => {
                 data.append(key, formData[key]);
             });
+
+            data.append("location", JSON.stringify({
+                type: "Point",
+                coordinates: [
+                    coordinates.lng,
+                    coordinates.lat,
+                ],
+            }));
 
             for (let i = 0; i < images.length; i++) {
                 data.append("images", images[i]);
@@ -162,31 +171,23 @@ function AddListing() {
                 />
             </div>
 
-            <div className="form-group">
-                <label>Latitude</label>
-                <input
-                    type="number"
-                    step="any"
-                    name="latitude"
-                    placeholder="e.g. 17.3850"
-                    value={formData.latitude}
-                    onChange={handleChange}
-                    required
-                />
+            <div className="form-group full-width">
+                  <label>Property Location</label>
+
+                  <MapPicker onLocationSelect={setCoordinates} />
+
+                  {coordinates && (
+                 <small>
+                    Selected Location:
+                <br />
+                Latitude: {coordinates.lat.toFixed(6)}
+                 <br />
+                Longitude: {coordinates.lng.toFixed(6)}
+                </small>
+                )}
             </div>
 
-            <div className="form-group">
-                <label>Longitude</label>
-                <input
-                    type="number"
-                    step="any"
-                    name="longitude"
-                    placeholder="e.g. 78.4867"
-                    value={formData.longitude}
-                    onChange={handleChange}
-                    required
-                />
-            </div>
+
 
             <h2 className="section-title">📞 Contact Details</h2>
 
